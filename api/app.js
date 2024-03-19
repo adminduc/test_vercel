@@ -1,8 +1,14 @@
-import express from "express";
+const express = require("express");
+
 const app = express();
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
+app.get("/", (req, res) => {
+  res.send("Express on Vercel");
+});
 
-app.listen(3000, () => console.log("Server ready on port 3000."));
+app.listen(5000, () => {
+  console.log("Running on port 5000.");
+});
 
-export const viteNodeApp = app;
+// Export the Express API
+module.exports = app;
