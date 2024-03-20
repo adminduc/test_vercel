@@ -1,16 +1,44 @@
 import express from "express";
-import dotenv from "dotenv";
-// Khởi tạo ứng dụng Express
-dotenv.config();
+import morgan from "morgan";
+import cors from "cors";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { fileURLToPath } from "url";
+import connectDB from "./configs/database.js";
+import Router from "./routes/index.js";
 const app = express();
-const port = 3000; // Cổng server
+dotenv.config();
 
-// Định tuyến cho route "/"
+const { PORT, MONGO_URI } = process.env;
+// Khởi tạo kết nối với cơ sở dữ liệu
+connectDB(MONGO_URI);
+
+app.use(express.json());
+// Bỏ block fetch api CORS
+app.use(cors());
+app.use(morgan("tiny"));
+
+// Theme home
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.get("/", (req, res) => {
-  res.send(`Hello, World! ${process.env.PORT}`); // Gửi "Hello, World!" về cho client
+  // docs https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/
+  return res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+// Navigate Router
+app.use("/api", Router);
+
+// Notfound api
+app.use((req, res, next) => {
+  //   const error = new Error("API not found");
+  //   error.status = 404;
+  //   next(error);
+  return res.status(404).json({
+    message: "API không tồn tại, bỏ cái thói rình mò API người khác đi",
+  });
 });
 
-// Lắng nghe các kết nối đến cổng đã chỉ định
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// Required listening Express server
+app.listen(PORT, (req, res) =>
+  console.log("Listen server running port " + PORT)
+);
