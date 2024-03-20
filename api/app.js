@@ -1,14 +1,14 @@
-const express = require("express");
+import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+// Khởi tạo ứng dụng Express
 const app = express();
-const port = 3000; // Cổng server
 
-// Định tuyến cho route "/"
 app.get("/", (req, res) => {
   res.send(`Hello, World! ${process.env.PORT}`); // Gửi "Hello, World!" về cho client
 });
 
-app.listen(3000, () => {
-  console.log("Running on port 3000.");
+// Lắng nghe các kết nối đến cổng đã chỉ định
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });
-// Export the Express API
-module.exports = app;
