@@ -1,14 +1,44 @@
-const express = require("express");
-
+import express from "express";
+import morgan from "morgan";
+import cors from "cors";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { fileURLToPath } from "url";
+import connectDB from "./configs/database.js";
+import Router from "./routes/index.js";
 const app = express();
+dotenv.config();
 
+const { PORT, MONGO_URI } = process.env;
+// Khởi tạo kết nối với cơ sở dữ liệu
+connectDB(MONGO_URI);
+
+app.use(express.json());
+// Bỏ block fetch api CORS
+app.use(cors());
+app.use(morgan("tiny"));
+
+// Theme home
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.get("/", (req, res) => {
-  res.send("Express on Vercel");
+  // docs https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/
+  return res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+// Navigate Router
+app.use("/api", Router);
+
+// Notfound api
+app.use((req, res, next) => {
+  //   const error = new Error("API not found");
+  //   error.status = 404;
+  //   next(error);
+  return res.status(404).json({
+    message: "API không tồn tại, bỏ cái thói rình mò API người khác đi",
+  });
 });
 
-app.listen(5000, () => {
-  console.log("Running on port 5000.");
-});
-
-// Export the Express API
-module.exports = app;
+// Required listening Express server
+app.listen(PORT, (req, res) =>
+  console.log("Listen server running port " + PORT)
+);
