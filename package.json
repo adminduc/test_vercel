@@ -2,7 +2,7 @@
   "type": "module",
   "name": "my-node-project",
   "version": "1.0.0",
-  "main": "/api/app.js",
+  "main": "api/app.js",
   "scripts": {
     "server": "nodemon api/app.js"
   },
