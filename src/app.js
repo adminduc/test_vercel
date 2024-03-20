@@ -23,8 +23,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.get("/", (req, res) => {
   // docs https://flaviocopes.com/fix-dirname-not-defined-es-module-scope/
-  return res.send("Hello world !");
-  // return res.sendFile(path.join(__dirname, "./public/index.html"));
+  // return res.send("Hello world !");
+  return res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 // Navigate Router
 app.use("/api", Router);
