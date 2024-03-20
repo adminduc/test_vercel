@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import morgan from "morgan";
 import cors from "cors";
 import * as dotenv from "dotenv";
@@ -14,6 +15,8 @@ const { PORT, MONGO_URI } = process.env;
 connectDB(MONGO_URI);
 
 app.use(express.json());
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 // Bỏ block fetch api CORS
 app.use(cors());
 app.use(morgan("tiny"));
